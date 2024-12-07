@@ -1,0 +1,11 @@
+services:
+  front:
+    platform: linux/amd64
+    container_name: todo_front
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    volumes:
+      - ./front:/app
+    ports:
+      - 3000:3000
