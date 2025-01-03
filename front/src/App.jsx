@@ -1,30 +1,31 @@
 import { useState } from 'react';
+
 import './App.css';
 
 function App() {
-	const [tasks, setTasks] = useState([]);
-	const [todo, setTodo] = useState('');
+	const [todos, setTodos] = useState([]);
+	const [newTodo, setNewTodo] = useState('');
 	const [id, setId] = useState(1);
 
 	const addTask = () => {
-		if (todo.trim()) {
-			setTasks([...tasks, { id: id, text: todo, completed: false }]);
+		if (newTodo.trim()) {
+			setTodos([...todos, { id: id, text: newTodo, completed: false }]);
 			setId(id + 1);
-			setTodo('');
+			setNewTodo('');
 		}
 	};
 
 	const toggleTask = (id) => {
-		setTasks(
-			tasks.map((task) => (task.id === id ? { ...task, completed: !task.completed } : task))
+		setTodos(
+			todos.map((task) => (task.id === id ? { ...task, completed: !task.completed } : task))
 		);
 	};
 
 	const deleteTask = (id) => {
-		setTasks(tasks.filter((taks) => taks.id !== id));
+		setTodos(todos.filter((taks) => taks.id !== id));
 	};
 
-	console.log('tasks =>', tasks);
+	console.log('tasks =>', todos);
 
 	return (
 		<div className="min-h-screen bg-gray-300 flex items-center justify-center">
@@ -34,8 +35,8 @@ function App() {
 					<input
 						type="text"
 						className="flex-1 p-2 border rounded-1 focus:outline-none"
-						value={todo}
-						onChange={(e) => setTodo(e.target.value)}
+						value={newTodo}
+						onChange={(e) => setNewTodo(e.target.value)}
 					/>
 					<button
 						className="bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-600"
@@ -45,25 +46,25 @@ function App() {
 					</button>
 				</div>
 				<ul className="space-y-2">
-					{tasks.map((task) => (
+					{todos.map((todo) => (
 						<li
-							key={task.id}
+							key={todo.id}
 							className={`flex justify-between items-center p-2 border rounded ${
-								task.completed ? 'line-through text-gray-500' : ''
+								todo.completed ? 'line-through text-gray-500' : ''
 							}`}
 						>
 							<div className="flex items-center">
 								<input
 									type="checkbox"
 									className="mr-2"
-									onChange={() => toggleTask(task.id)}
-									checked={task.completed}
+									onChange={() => toggleTask(todo.id)}
+									checked={todo.completed}
 								/>
-								<span>{task.text}</span>
+								<span>{todo.text}</span>
 							</div>
 							<button
 								className="text-red-500 hover:text-red-700"
-								onClick={() => deleteTask(task.id)}
+								onClick={() => deleteTask(todo.id)}
 							>
 								Delete
 							</button>

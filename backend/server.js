@@ -1,11 +1,12 @@
 const express = require('express');
+const cors = require('cors');
 
 // routerのインポート
 const todoRouter = require('./routes/todo.router');
 
 const app = express();
 
-app.use(express.json(), express.urlencoded({ extended: true }));
+app.use(express.json(), express.urlencoded({ extended: true }), cors());
 
 app.use('/todo', todoRouter);
 
