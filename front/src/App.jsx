@@ -17,12 +17,12 @@ function App() {
 
 	const toggleTask = (id) => {
 		setTodos(
-			todos.map((task) => (task.id === id ? { ...task, completed: !task.completed } : task))
+			todos.map((todo) => (todo.id === id ? { ...todo, completed: !todo.completed } : todo))
 		);
 	};
 
 	const deleteTask = (id) => {
-		setTodos(todos.filter((taks) => taks.id !== id));
+		setTodos(todos.filter((todo) => todo.id !== id));
 	};
 
 	console.log('tasks =>', todos);
