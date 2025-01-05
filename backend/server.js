@@ -6,7 +6,7 @@ const todoRouter = require('./routes/todo.router');
 
 const app = express();
 
-app.use(express.json(), express.urlencoded({ extended: true }), cors());
+app.use(express.json(), express.urlencoded({ extended: true }), cors({ origin: 'http://localhost:3000' }));
 
 app.use('/todo', todoRouter);
 

@@ -1,29 +1,74 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 import './App.css';
 
 function App() {
 	const [todos, setTodos] = useState([]);
 	const [newTodo, setNewTodo] = useState('');
-	const [id, setId] = useState(1);
 
 	const addTask = () => {
 		if (newTodo.trim()) {
-			setTodos([...todos, { id: id, text: newTodo, completed: false }]);
-			setId(id + 1);
-			setNewTodo('');
+			axios
+				.post(`${process.env.REACT_APP_API_URL}/todo/create`, {
+					todo: newTodo.trim(),
+				})
+				.then((response) => {
+					const responseTodo = response.data.todo;
+					setTodos((prevTodos) => [...prevTodos, responseTodo]);
+					setNewTodo('');
+				})
+				.catch((error) => {
+					console.error('エラー', error);
+				});
 		}
 	};
 
 	const toggleTask = (id) => {
-		setTodos(
-			todos.map((todo) => (todo.id === id ? { ...todo, completed: !todo.completed } : todo))
-		);
+		const targetTodo = todos.find((todo) => todo.id === id);
+		if (!targetTodo) return;
+
+		axios
+			.put(`${process.env.REACT_APP_API_URL}/todo/update/${id}`, {
+				completed: !targetTodo.completed,
+			})
+			.then(() => {
+				setTodos((prevTodos) =>
+					prevTodos.map((prevTodo) =>
+						prevTodo.id === id ? { ...prevTodo, completed: !prevTodo.completed } : prevTodo
+					)
+				);
+			})
+			.catch((error) => {
+				console.error(error);
+			});
 	};
 
 	const deleteTask = (id) => {
-		setTodos(todos.filter((todo) => todo.id !== id));
+		const deleteTodo = todos.find((todo) => todo.id === id);
+		if (!deleteTodo) return;
+
+		axios
+			.delete(`${process.env.REACT_APP_API_URL}/todo/delete/${id}`)
+			.then(() => {
+				setTodos((prevTodos) => prevTodos.filter((prevTodo) => prevTodo.id !== id));
+			})
+			.catch((error) => {
+				console.error(error);
+			});
 	};
+
+	useEffect(() => {
+		axios
+			.get(`${process.env.REACT_APP_API_URL}/todo`)
+			.then((response) => {
+				console.log(response.data);
+				setTodos(response.data.todos);
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+	}, []);
 
 	console.log('tasks =>', todos);
 

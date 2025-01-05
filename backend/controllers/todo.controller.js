@@ -27,14 +27,16 @@ exports.createTodo = async (req, res, next) => {
   }
 
   try {
-    await prisma.task.create({
+    const newTodo = await prisma.task.create({
       data: {
         text: todo.trim()
       }
     });
+    console.log('newTodo =>', newTodo);
+
     res.status(201).json({
       success: true,
-      message: 'Todoが作成されました'
+      todo: newTodo
     });
   } catch (error) {
     return next(error);
