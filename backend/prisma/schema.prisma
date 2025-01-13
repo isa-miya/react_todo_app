@@ -17,5 +17,16 @@ model Task {
   id Int @id @default(autoincrement())
   text String
   completed Boolean @default(false)
+  userId Int?
+  user User? @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  name String
+  email String @unique
+  password String
+  tasks Task[]
   createdAt DateTime @default(now())
 }

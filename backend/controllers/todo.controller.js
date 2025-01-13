@@ -1,5 +1,4 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const prisma = require('../util/prisma');
 const HttpError = require('../util/http-error');
 
 
@@ -13,8 +12,6 @@ exports.getAllTodos = async (req, res, next) => {
     });
   } catch (error) {
     return next(error);
-  } finally {
-    await prisma.$disconnect();
   }
 };
 
@@ -40,8 +37,6 @@ exports.createTodo = async (req, res, next) => {
     });
   } catch (error) {
     return next(error);
-  } finally {
-    await prisma.$disconnect();
   }
 };
 
@@ -64,8 +59,6 @@ exports.editTodo = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
-  } finally {
-    await prisma.$disconnect();
   }
 };
 
@@ -82,7 +75,5 @@ exports.deleteTodo = async (req, res, next) => {
     res.status(204).send();
   } catch (error) {
     next(error);
-  } finally {
-    await prisma.$disconnect();
   }
 };
