@@ -1,7 +1,7 @@
 const prisma = require('../util/prisma');
 const HttpError = require('../util/http-error');
 const bcrypt = require('bcryptjs');
-const { generateToken } = require('../util/jwt');
+const { generateToken, verifyToken } = require('../util/jwt');
 
 // * POST => /users/signup
 exports.signup = async (req, res, next) => {
@@ -92,7 +92,7 @@ exports.signout = (req, res, next) => {
   res.clearCookie('token', {
     httpOnly: true,
     secure: false,
-    sameSite: 'none'
+    sameSite: 'strict'
   });
   res.status(200).json({
     message: 'ログアウトしました'
