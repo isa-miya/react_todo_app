@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+
+import { useAuth } from '../context/AuthContext';
 
 function Login() {
 	const [formData, setFormData] = useState({
@@ -9,6 +10,7 @@ function Login() {
 	});
 
 	const navigate = useNavigate();
+	const { login } = useAuth();
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
@@ -20,20 +22,7 @@ function Login() {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		axios
-			.post(`${process.env.REACT_APP_API_URL}/users/signin`, formData, { withCredentials: true })
-			.then(() => {
-				alert('ログインに成功しました');
-				setFormData({
-					email: '',
-					password: '',
-				});
-				navigate('/todo');
-			})
-			.catch((error) => {
-				alert('ログインに失敗しました');
-				console.error(error);
-			});
+		login(formData, navigate);
 	};
 
 	return (

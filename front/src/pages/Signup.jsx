@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
+import { useAuth } from '../context/AuthContext';
 
 function Signup() {
 	const [formData, setFormData] = useState({
@@ -7,6 +9,9 @@ function Signup() {
 		email: '',
 		password: '',
 	});
+
+	const navigate = useNavigate();
+	const { signup } = useAuth();
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
@@ -18,23 +23,8 @@ function Signup() {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		axios
-			.post(`${process.env.REACT_APP_API_URL}/users/signup`, formData)
-			.then(() => {
-				alert('ユーザーが作成されました');
-				setFormData({
-					name: '',
-					email: '',
-					password: '',
-				});
-			})
-			.catch((error) => {
-				console.error(error);
-				alert('作成中にエラーが発生しました。もう一度やり直してください。');
-			});
+		signup(formData, navigate);
 	};
-
-	console.log(formData);
 
 	return (
 		<div className="min-h-screen bg-gray-300 flex items-center justify-center">

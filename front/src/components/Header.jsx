@@ -1,34 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 function Header() {
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const navigate = useNavigate();
-
-	useEffect(() => {
-		axios
-			.get(`${process.env.REACT_APP_API_URL}/users/check-auth`, { withCredentials: true })
-			.then((response) => {
-				setIsLoggedIn(true);
-			})
-			.catch(() => {
-				setIsLoggedIn(false);
-				navigate('/login');
-			});
-	}, [navigate]);
-
-	const handleLogout = () => {
-		axios
-			.post(`${process.env.REACT_APP_API_URL}/users/signout`, {}, { withCredentials: true })
-			.then(() => {
-				setIsLoggedIn(false);
-				navigate('/login');
-			})
-			.catch((error) => {
-				console.error(error);
-			});
-	};
+	const { isLoggedIn, logout } = useAuth();
 
 	return (
 		<header className="bg-blue-500 text-white py-4">
@@ -39,7 +14,7 @@ function Header() {
 						Home
 					</Link>
 					{isLoggedIn ? (
-						<button onClick={handleLogout} className="px-4 hover:underline">
+						<button onClick={logout} className="px-4 hover:underline">
 							Log Out
 						</button>
 					) : (
