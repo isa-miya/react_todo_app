@@ -8,9 +8,13 @@ const Todo = () => {
 	const addTask = () => {
 		if (newTodo.trim()) {
 			axios
-				.post(`${process.env.REACT_APP_API_URL}/todo/create`, {
-					todo: newTodo.trim(),
-				})
+				.post(
+					`${process.env.REACT_APP_API_URL}/todo/create`,
+					{
+						todo: newTodo.trim(),
+					},
+					{ withCredentials: true }
+				)
 				.then((response) => {
 					const responseTodo = response.data.todo;
 					setTodos((prevTodos) => [...prevTodos, responseTodo]);
@@ -27,9 +31,13 @@ const Todo = () => {
 		if (!targetTodo) return;
 
 		axios
-			.put(`${process.env.REACT_APP_API_URL}/todo/update/${id}`, {
-				completed: !targetTodo.completed,
-			})
+			.put(
+				`${process.env.REACT_APP_API_URL}/todo/update/${id}`,
+				{
+					completed: !targetTodo.completed,
+				},
+				{ withCredentials: true }
+			)
 			.then(() => {
 				setTodos((prevTodos) =>
 					prevTodos.map((prevTodo) =>
@@ -47,7 +55,7 @@ const Todo = () => {
 		if (!deleteTodo) return;
 
 		axios
-			.delete(`${process.env.REACT_APP_API_URL}/todo/delete/${id}`)
+			.delete(`${process.env.REACT_APP_API_URL}/todo/delete/${id}`, { withCredentials: true })
 			.then(() => {
 				setTodos((prevTodos) => prevTodos.filter((prevTodo) => prevTodo.id !== id));
 			})
@@ -67,8 +75,6 @@ const Todo = () => {
 				console.error(error);
 			});
 	}, []);
-
-	console.log('tasks =>', todos);
 
 	return (
 		<div className="min-h-screen bg-gray-300 flex items-center justify-center">

@@ -4,8 +4,12 @@ const HttpError = require('../util/http-error');
 
 // * GET => /todo
 exports.getAllTodos = async (req, res, next) => {
+  console.log(req.user);
+
   try {
-    const tasks = await prisma.task.findMany();
+    const tasks = await prisma.task.findMany({
+      where: { userId: req.user.userId }
+    });
     res.status(200).json({
       success: true,
       todos: tasks
@@ -26,6 +30,7 @@ exports.createTodo = async (req, res, next) => {
   try {
     const newTodo = await prisma.task.create({
       data: {
+        userId: req.user.userId,
         text: todo.trim()
       }
     });
@@ -45,7 +50,7 @@ exports.editTodo = async (req, res, next) => {
   const { id } = req.params;
   const todoId = parseInt(id);
   try {
-    const targetTodo = await prisma.task.findUnique({ where: { id: todoId } });
+    const targetTodo = await prisma.task.findUnique({ where: { userId: req.user.userId, id: todoId } });
     if (!targetTodo) {
       throw new HttpError('指定されたIDのTodoが見つかりません', 404);
     }
@@ -67,7 +72,7 @@ exports.deleteTodo = async (req, res, next) => {
   const { id } = req.params;
   const todoId = parseInt(id);
   try {
-    const targetTodo = await prisma.task.findUnique({ where: { id: todoId } });
+    const targetTodo = await prisma.task.findUnique({ where: { userId: req.user.userId, id: todoId } });
     if (!targetTodo) {
       throw new HttpError('指定されたIDのTodoが見つかりません', 404);
     }
